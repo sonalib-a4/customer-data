@@ -12,7 +12,9 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import axios from 'axios';
-  
+import { Navbar } from './Navbar';
+import { useNavigate } from 'react-router-dom';
+
 export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -27,12 +29,18 @@ export default function SignIn() {
       .then(res => {
         if(res.status == 200)
           alert("You are logged in successfully");
+          window.localStorage.setItem('isLoggedIn', true);
+          navigate("/Dashboard");
       })
       .catch((error) => { alert(error?.response?.data?.error)})
   };
 
+  const navigate = useNavigate();
+
   return (
-      <Container component="main" maxWidth="xs">
+    <div>
+      <Navbar />
+      <Container component="main" maxWidth="xs" margin="5">
         <CssBaseline />
         <Box
           sx={{
@@ -73,24 +81,13 @@ export default function SignIn() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              size="medium"
             >
               Login
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
+    </div>
   );
 }
