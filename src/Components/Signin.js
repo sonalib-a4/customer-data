@@ -3,10 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
@@ -14,25 +10,47 @@ import Container from '@mui/material/Container';
 import axios from 'axios';
 import { Navbar } from './Navbar';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function SignIn() {
+  
+  const [formData, setFormData] = useState({email: "", password: ""})
+  const [errors, setErrors] = useState({})
+
+  const validate = event => {
+    let temp = {};
+    temp.email = formData.email === "" ? "Email is required." : ""
+    if(formData.email)
+      temp.email = (/\S+@\S+\.\S+/).test(formData.email) ? "" : (temp.email + " Email format is invalid.")
+    temp.password = formData.password === "" ? "Password is required." : ""
+    if(formData.password)
+      temp.password = formData.password.length < 9 ? "Minimum 10 numbers required." : ""
+    setErrors({
+      ...temp
+    })
+    return Object.values(temp).every(x => x == "")
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    
+    if(validate()){
       axios.post(`http://localhost:3000/users/login`, 
         { user: { 
-                  email: data.get("email"), 
-                  password: data.get("password")
-                }
+            email: data.get("email"), 
+            password: data.get("password")
+          }
         }
       )
       .then(res => {
-        if(res.status == 200)
+        if(res.status === 200)
           alert("You are logged in successfully");
           window.localStorage.setItem('isLoggedIn', true);
-          navigate("/Dashboard");
+          navigate("/home");
       })
       .catch((error) => { alert(error?.response?.data?.error)})
+    }
   };
 
   const navigate = useNavigate();
@@ -58,24 +76,41 @@ export default function SignIn() {
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
+              required={true}
               margin="normal"
-              required
               fullWidth
+              onChange={ event => {
+                  setFormData({
+                    ...formData,
+                    email: event.currentTarget.value 
+                  })
+                }
+              }
               id="email"
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
+              error={errors.email ? true : false}
+              helperText={errors.email}
             />
             <TextField
-              margin="normal"
               required
+              margin="normal"
               fullWidth
+              onChange={ event => {
+                setFormData({
+                  ...formData,
+                  password: event.currentTarget.value
+                })
+              }
+            }
               name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              error={errors.password ? true : false}
+              helperText={errors.password}
             />
             <Button
               type="submit"
