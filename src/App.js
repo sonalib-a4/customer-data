@@ -10,13 +10,9 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<SignIn />} />
-      { JSON.parse(window.localStorage.getItem("isLoggedIn")) ?  
-        [
-          <Route path="/dashboard" element={<Dashboard />} />     
-          <Route path="/customers" element={<CustomerList />} />     
-          <Route path="/home" element={<Home />} />
-        ] : null
-      }
+      <Route path="/dashboard" element={<Dashboard />} />     
+      <Route path="/customers" element={<CustomerList />} />     
+      <Route path="/home" element={<Home />} />
     </Routes>
   );
 }
