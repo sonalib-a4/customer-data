@@ -12,19 +12,22 @@ import IconButton from '@mui/material/IconButton';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css'
 import { render } from '@testing-library/react';
+
 const CustomerList = () => {
   const [rowData, setRowData] = useState(null)
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({name: "", email: "", password: "", status: ""})
+  const [formData, setFormData] = useState({name: "", email: "", status: ""})
   const [errors, setErrors] = useState({})
 
-  const validate = event => {
+
+  // without formik and yup
+  const validate = () => {
     let temp = {};
     temp.name = formData.name === "" ? "Name is required." : ""
     if(formData.name)
-      temp.name = formData.name.length <= 5  ? temp.name + " Name is required." : ""
+      temp.name = formData.name.length <= 5  ? `${temp.name}, Minimum 5 characters required.` : ""
     temp.status = formData.status === "" ? "Status is required." : ""
     temp.email = formData.email === "" ? "Email is required." : ""
     if(formData.email)
@@ -97,18 +100,15 @@ const CustomerList = () => {
     })
   }
 
-  const handleSubmit = event => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget)
+  const handleSubmit = (event) => {
+    // fetched input values for form
+    event.preventDefault()
+    // const data = new FormData(event.currentTarget)
     if(validate()){
-      let options = { 
-        name: data.get("name"),
-        email: data.get("email"),
-        status: data.get("status")
-      }
+      // we can use formData values here also
       if(formData.id){
         axios.put(`http://localhost:3000/users/${formData.id}`, 
-          { user: options }
+          { user: formData }
         )
         .then(res => {
           if(res.status == 200){
@@ -120,7 +120,7 @@ const CustomerList = () => {
         .catch((error) => { alert(error?.response?.data?.error)})
       }else{
         axios.post(`http://localhost:3000/users/`, 
-          { user: options }
+          { user: formData }
         )
         .then(res => {
           if(res.status == 201){
@@ -131,7 +131,6 @@ const CustomerList = () => {
         })
         .catch((error) => { alert(error?.response?.data?.error)})
       }
-      
     }
   }
 

@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { 
   DialogActions,
   DialogContent,
@@ -16,11 +18,32 @@ import Box from '@mui/material/Box';
 
 export default function FormDialog({ errors, formData, open, handleClose, handleSubmit, onChange}) {
 
+  // const validateForm = Yup.object().shape({
+  //   name: Yup.string()
+  //     .min(5, 'Too Short!')
+  //     .max(50, 'Too Long!')
+  //     .required('Required'),
+  //   email: Yup.string().email('Invalid email').required('Required'),
+  //   status: Yup.string().required('Required')
+  // });
+
+  // const formik = useFormik({
+  //   initialValues: {
+  //     name: '',
+  //     email: '',
+  //     status: ''
+  //   },
+  //   handleSubmit: function (values) {
+  //     handleSubmit()
+  //   },
+  //   validationSchema: validateForm,
+  // })
+
   return (
     <div>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{formData.id ? "Update User" : "Create New User" }</DialogTitle>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={ (e) => handleSubmit(e) } noValidate sx={{ mt: 1 }}>
           <DialogContent>
             <TextField
               margin="normal"
@@ -68,12 +91,12 @@ export default function FormDialog({ errors, formData, open, handleClose, handle
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
             <Button
-                type="submit"
-                variant="contained"
-                size="small"
-                >
-                { formData.id ? "Update" : "Submit" }
-              </Button>
+              type="submit"
+              variant="contained"
+              size="small"
+              >
+              { formData.id ? "Update" : "Submit" }
+            </Button>
           </DialogActions>
         </Box>
       </Dialog>
