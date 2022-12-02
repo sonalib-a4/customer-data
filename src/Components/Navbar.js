@@ -1,18 +1,17 @@
-  import { AppBar, Toolbar, Avatar, Button, Menu, MenuItem, Stack } from '@mui/material';
+  import { AppBar, Toolbar, Avatar, Switch, Button, Menu, MenuItem, Stack } from '@mui/material';
   import LogoutIcon from '@mui/icons-material/Logout';
   import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
   import React, { Component } from 'react'
   import { useNavigate } from 'react-router-dom';
-  import { useState } from 'react';
   import { Link } from '@mui/material';
-  import CustomerList from './CustomerList';
 
   export class Navbar extends Component {
     constructor(props) {
       super(props)
       this.state = {
         isLoggedIn: JSON.parse(window.localStorage.getItem("isLoggedIn")),
-        anchorEl: null
+        anchorEl: null,
+        checked: true
       }
     }
 
@@ -38,6 +37,8 @@
       })
     }
 
+   
+
     render() {
       return (
         <AppBar>
@@ -52,7 +53,9 @@
                           id="clinician-list-button" 
                           onClick={this.handleClick}
                           endIcon={<KeyboardArrowDownIcon />}
-                          >Customer</Button>
+                          >Customer
+                  </Button>
+                  
                   <Button 
                     variant="contained"
                     color="secondary" 
@@ -68,13 +71,13 @@
                   href="/customers"
                   >
                   Customers</MenuItem>
-                  <MenuItem onClick={this.handleClose} >Accounts</MenuItem>
+                  <MenuItem component={Link} onClick={this.handleClose} href="/editable_table" >Accounts</MenuItem>
                   <MenuItem onClick={this.handleClose} >Gallery</MenuItem>
                 </Menu>
               </Stack>
             }
           </Toolbar>
-      </AppBar>
+        </AppBar>
       )
     }
   }

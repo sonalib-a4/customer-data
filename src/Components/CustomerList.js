@@ -146,6 +146,7 @@ const CustomerList = () => {
     fetch("http://localhost:3000/users")
     .then(result => result.json())
     .then(rowData => setRowData(rowData));
+    
   }
 
   return (
@@ -158,6 +159,7 @@ const CustomerList = () => {
       </Grid>
       <Grid item xs={9}>
         <div className="ag-theme-alpine" style={{height: 500, margin: "px"}} >
+          {console.log(rowData)}
           <AgGridReact 
           rowData={rowData}
           columnDefs={columnDefs}
